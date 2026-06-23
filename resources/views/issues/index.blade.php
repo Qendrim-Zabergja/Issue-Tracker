@@ -68,7 +68,13 @@
                 @foreach ($issues as $issue)
                 <tr>
                     <td><a href="{{ route('issues.show', $issue) }}">{{ $issue->title }}</a></td>
-                    <td><a href="{{ route('projects.show', $issue->project) }}" class="text-muted text-sm">{{ $issue->project->name }}</a></td>
+                    <td>
+                        @if ($issue->project)
+                            <a href="{{ route('projects.show', $issue->project) }}" class="text-muted text-sm">{{ $issue->project->name }}</a>
+                        @else
+                            <span class="text-muted text-sm">—</span>
+                        @endif
+                    </td>
                     <td><span class="badge badge-{{ $issue->status }}">{{ str_replace('_', ' ', $issue->status) }}</span></td>
                     <td><span class="badge badge-{{ $issue->priority }}">{{ $issue->priority }}</span></td>
                     <td>

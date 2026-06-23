@@ -75,6 +75,7 @@ class ProjectController extends Controller
     {
         $this->authorize('delete', $project);
 
+        $project->issues()->each(fn ($issue) => $issue->delete());
         $project->delete();
 
         return redirect()->route('projects.index')
