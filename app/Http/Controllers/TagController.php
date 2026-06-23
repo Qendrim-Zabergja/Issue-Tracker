@@ -33,7 +33,7 @@ class TagController extends Controller
             ->with('success', 'Tag created.');
     }
 
-    public function destroy(Tag $tag): RedirectResponse
+    public function delete(Tag $tag): RedirectResponse
     {
         $this->authorize('delete', $tag);
 

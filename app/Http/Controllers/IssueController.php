@@ -87,7 +87,7 @@ class IssueController extends Controller
             ->with('success', 'Issue updated successfully.');
     }
 
-    public function destroy(Issue $issue): RedirectResponse
+    public function delete(Issue $issue): RedirectResponse
     {
         $this->authorize('delete', $issue);
 

@@ -2,28 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\CommentFilters;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Resources\CommentResource;
+use App\Models\Comment;
 use App\Models\Issue;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function index(Issue $issue): JsonResponse
+    public function index(Request $request, CommentFilters $filters): JsonResponse
     {
-        $this->authorize('view', $issue);
+        $this->authorize('viewAny', Comment::class);
 
-        $comments = $issue->comments()->paginate(10);
+        $comments = Comment::filter($filters)
+            ->paginate($request->limit ?? 10);
 
         return CommentResource::collection($comments)->response();
     }
 
-    public function store(StoreCommentRequest $request, Issue $issue): JsonResponse
+    public function store(StoreCommentRequest $request): JsonResponse
     {
-        $this->authorize('view', $issue);
+        $this->authorize('create', Comment::class);
 
-        $comment = $issue->comments()->create($request->validated());
+        $issue = Issue::where('uuid', $request->validated('issue_id'))->firstOrFail();
 
-        return (new CommentResource($comment))->response()->setStatusCode(201);
+        $comment = Comment::create([
+            'issue_id'    => $issue->id,
+            'author_name' => $request->validated('author_name'),
+            'body'        => $request->validated('body'),
+        ]);
+
+        $comment = $this->loadRelationships($comment, $request);
+
+        return response(new CommentResource($comment), 201);
+    }
+
+    public function delete(Comment $comment): JsonResponse
+    {
+        $this->authorize('delete', $comment);
+
+        $comment->delete();
+
+        return response(null, 204);
     }
 }

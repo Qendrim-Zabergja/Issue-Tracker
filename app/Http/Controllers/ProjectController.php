@@ -71,7 +71,7 @@ class ProjectController extends Controller
             ->with('success', 'Project updated successfully.');
     }
 
-    public function destroy(Project $project): RedirectResponse
+    public function delete(Project $project): RedirectResponse
     {
         $this->authorize('delete', $project);
 
