@@ -43,9 +43,15 @@ class DatabaseSeeder extends Seeder
                         ->each(function (Issue $issue) use ($tags, $users) {
                             $issue->tags()->attach($tags->random(rand(1, 3)));
                             $issue->assignees()->attach($users->random(rand(1, 2)));
-                            $issue->comments()->createMany(
-                                \Database\Factories\CommentFactory::new()->count(rand(2, 5))->make()->toArray()
-                            );
+                            $count = rand(2, 5);
+                            $comments = [];
+                            for ($i = 0; $i < $count; $i++) {
+                                $comments[] = [
+                                    'author_name' => fake()->name(),
+                                    'body'        => fake()->paragraph(),
+                                ];
+                            }
+                            $issue->comments()->createMany($comments);
                         });
                 });
         }
