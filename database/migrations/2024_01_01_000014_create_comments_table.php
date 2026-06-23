@@ -10,10 +10,12 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignId('issue_id')->constrained()->cascadeOnDelete();
             $table->string('author_name');
             $table->text('body');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

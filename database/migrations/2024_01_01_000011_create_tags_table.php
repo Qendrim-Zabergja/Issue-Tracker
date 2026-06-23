@@ -10,9 +10,11 @@ return new class extends Migration
     {
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name')->unique();
             $table->string('color', 7)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
