@@ -36,7 +36,7 @@ class CommentController extends Controller
 
         $comment = $this->loadRelationships($comment, $request);
 
-        return response(new CommentResource($comment), 201);
+        return (new CommentResource($comment))->response()->setStatusCode(201);
     }
 
     public function delete(Comment $comment): JsonResponse
@@ -45,6 +45,6 @@ class CommentController extends Controller
 
         $comment->delete();
 
-        return response(null, 204);
+        return response()->json(null, 204);
     }
 }
