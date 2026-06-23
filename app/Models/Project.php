@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Filters\Filterable;
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuid, SoftDeletes, Filterable;
 
     protected $fillable = [
         'name',
@@ -21,8 +24,13 @@ class Project extends Model
 
     protected $casts = [
         'start_date' => 'date',
-        'deadline' => 'date',
+        'deadline'   => 'date',
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
 
     public function user(): BelongsTo
     {

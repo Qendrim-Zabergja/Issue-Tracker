@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Filters\Filterable;
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Issue extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuid, SoftDeletes, Filterable;
 
     protected $fillable = [
         'project_id',
@@ -24,6 +27,11 @@ class Issue extends Model
     protected $casts = [
         'due_date' => 'date',
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
 
     public function project(): BelongsTo
     {
@@ -43,23 +51,5 @@ class Issue extends Model
     public function assignees(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
-    }
-
-    public function scopeByStatus($query, ?string $status)
-    {
-        return $status ? $query->where('status', $status) : $query;
-    }
-
-    public function scopeByPriority($query, ?string $priority)
-    {
-        return $priority ? $query->where('priority', $priority) : $query;
-    }
-
-    public function scopeSearch($query, ?string $search)
-    {
-        return $search
-            ? $query->where(fn ($q) => $q->where('title', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%"))
-            : $query;
     }
 }
