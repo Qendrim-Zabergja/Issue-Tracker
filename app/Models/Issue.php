@@ -37,12 +37,12 @@ class Issue extends Model
 
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class)->withTimestamps();
+        return $this->belongsToMany(Tag::class);
     }
 
     public function assignees(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->withTimestamps();
+        return $this->belongsToMany(User::class);
     }
 
     public function scopeByStatus($query, ?string $status)

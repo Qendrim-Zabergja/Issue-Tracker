@@ -14,6 +14,6 @@ class Tag extends Model
 
     public function issues(): BelongsToMany
     {
-        return $this->belongsToMany(Issue::class)->withTimestamps();
+        return $this->belongsToMany(Issue::class);
     }
 }

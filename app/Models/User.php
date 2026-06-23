@@ -34,6 +34,6 @@ class User extends Authenticatable
 
     public function assignedIssues(): BelongsToMany
     {
-        return $this->belongsToMany(Issue::class)->withTimestamps();
+        return $this->belongsToMany(Issue::class);
     }
 }
